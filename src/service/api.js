@@ -6,6 +6,10 @@ import {
   where,
   getDocs,
   orderBy,
+  doc,
+  deleteDoc,
+  updateDoc,
+  getDoc,
 } from "firebase/firestore";
 import { db } from "./firebase";
 
@@ -39,5 +43,23 @@ export const addTodo = async (content, uid) => {
     content: content,
     isComplete: false,
     createdAt: serverTimestamp(),
+  });
+};
+
+export const deleteTodo = async (uid) => {
+  const dataRef = doc(db, "todo", uid);
+  await deleteDoc(dataRef);
+};
+
+export const updateComplete = async (uid) => {
+  // const todo = await collection(db, "todo", uid);
+  const docRef = doc(db, "todo", uid);
+  const docSnap = await getDoc(docRef);
+  //   console.log(
+  //     "🚀 ~ file: api.js ~ line 58 ~ updateComplete ~ docSnap",
+  //     docSnap.data().isComplete
+  //   );
+  return await updateDoc(docRef, {
+    isComplete: !docSnap.data().isComplete,
   });
 };
